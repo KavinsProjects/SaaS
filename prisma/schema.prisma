@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id
+  email             String    @unique
+  name              String
+  isSubScribed      Boolean   @default(false)
+  subscritionEndsIn DateTime?
+  todos             ToDo[]
+  createAt          DateTime
+}
+
+model ToDo {
+  id          String   @id @default(cuid()) //globally unique identifirer
+  title       String
+  isCompleted Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id]) // makeing realtionship with User table
+  userId      String
+  createAt    DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
